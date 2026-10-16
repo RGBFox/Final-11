@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 	"log"
-	
+
 	"github.com/stretchr/testify/require"
 )
 
@@ -105,7 +105,11 @@ func TestSetStatus(t *testing.T) {
 	if err != nil {
 		require.NoError(t, err)
 	}
-	defer db.Close()
+	defer func() {
+    if err := db.Close(); err != nil {
+        log.Println("close db:", err)
+    }
+}()
 	store := NewParcelStore(db)
 	parcel := getTestParcel()
 
@@ -134,7 +138,11 @@ func TestGetByClient(t *testing.T) {
 	if err != nil {
 		require.NoError(t, err)
 	}
-	defer db.Close()
+	defer func() {
+    if err := db.Close(); err != nil {
+        log.Println("close db:", err)
+    }
+}()
 	store := NewParcelStore(db)
 
 	parcels := []Parcel{
