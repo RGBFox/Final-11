@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"testing"
 	"time"
+	"log"
 
 	"github.com/stretchr/testify/require"
 )
@@ -35,7 +36,11 @@ func TestAddGetDelete(t *testing.T) {
 	if err != nil {
 		require.NoError(t, err)
 	}
-	defer db.Close()
+	defer func() {
+    if err := db.Close(); err != nil {
+        log.Println("close db:", err)
+    }
+}()
 	store := NewParcelStore(db)
 	parcel := getTestParcel()
 
@@ -53,8 +58,9 @@ func TestAddGetDelete(t *testing.T) {
 
 	// delete
 	err = store.Delete(parcel.Number)
+	require.NoError(t, err)
 
-	stored, err = store.Get(parcel.Number)
+	_, err = store.Get(parcel.Number)
 	require.Equal(t, sql.ErrNoRows, err)
 }
 
@@ -65,7 +71,11 @@ func TestSetAddress(t *testing.T) {
 	if err != nil {
 		require.NoError(t, err)
 	}
-	defer db.Close()
+	defer func() {
+    if err := db.Close(); err != nil {
+        log.Println("close db:", err)
+    }
+}()
 	store := NewParcelStore(db)
 	parcel := getTestParcel()
 
@@ -95,7 +105,11 @@ func TestSetStatus(t *testing.T) {
 	if err != nil {
 		require.NoError(t, err)
 	}
-	defer db.Close()
+	defer func() {
+    if err := db.Close(); err != nil {
+        log.Println("close db:", err)
+    }
+}()
 	store := NewParcelStore(db)
 	parcel := getTestParcel()
 
@@ -124,7 +138,11 @@ func TestGetByClient(t *testing.T) {
 	if err != nil {
 		require.NoError(t, err)
 	}
-	defer db.Close()
+	defer func() {
+    if err := db.Close(); err != nil {
+        log.Println("close db:", err)
+    }
+}()
 	store := NewParcelStore(db)
 
 	parcels := []Parcel{
